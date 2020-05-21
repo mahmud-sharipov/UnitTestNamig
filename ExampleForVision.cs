@@ -36,14 +36,14 @@ namespace Sales.Payment
 
 #if DEBUG
         [TestMethod]
-        public void SalesInvoiceAccesscmdProcess_BillingCustomerIsNull_Applicable()
+        public void SalesInvoicecmdProcessAccessCompute_BillingCustomerIsNull_Applicable()
         {
             var salesInvoice = new SalesInvoice(TestContext);
             Assert.IsFalse(IsHiddenAndNotApplicable(salesInvoice.accesscmdProcess));
         }
 
         [TestMethod]
-        public void SalesInvoiceAccesscmdProcess_ChargeIsAllowedForCustomer_Applicable()
+        public void SalesInvoicecmdProcessAccessCompute_ChargeIsAllowedForCustomer_Applicable()
         {
             var customer = PaymentHelper.GetCustomer("LGBUI");
             var salesInvoice = PaymentHelper.CreateInvoiceWithDetail(customer, PaymentHelper.DefaultProduct, 1, 10).Invoice;
@@ -51,7 +51,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void SalesInvoiceAccesscmdProcess_ChargeIsNotAllowedForCustomer_HiddenAndNotApplicable()
+        public void SalesInvoicecmdProcessAccessCompute_ChargeIsNotAllowedForCustomer_HiddenAndNotApplicable()
         {
             var cashCustomer = PaymentHelper.GetCustomer("LGBUI");
             PaymentHelper.DisallowCharge(cashCustomer);
@@ -60,7 +60,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void SalesInvoiceAccesscmdProcess_ChargeIsNotAllowedAndBalanceIsZero_Applicable()
+        public void SalesInvoicecmdProcessAccessCompute_ChargeIsNotAllowedAndBalanceIsZero_Applicable()
         {
             var cashCustomer = PaymentHelper.GetCustomer("LGBUI");
             PaymentHelper.DisallowCharge(cashCustomer);
@@ -71,7 +71,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void SalesInvoiceAccesscmdProcess_ChargeIsNotAllowedAndBalanceIsNegative_Applicable()
+        public void SalesInvoicecmdProcessAccessCompute_ChargeIsNotAllowedAndBalanceIsNegative_Applicable()
         {
             var cashCustomer = PaymentHelper.GetCustomer("LGBUI");
             PaymentHelper.DisallowCharge(cashCustomer);
@@ -82,7 +82,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void SalesInvoiceAccesscmdProcess_ChargeIsTemporaryAllowed_Applicable()
+        public void SalesInvoicecmdProcessAccessCompute_ChargeIsTemporaryAllowed_Applicable()
         {
             var cashCustomer = PaymentHelper.GetCustomer("LGBUI");
             PaymentHelper.DisallowCharge(cashCustomer);
@@ -105,14 +105,14 @@ namespace Sales.Payment
 
 #if DEBUG
         [TestMethod]
-        public void BankAccountAccessNextCheckNumber_AccountTypeIsNotChecking_Hidden()
+        public void BankAccountNextCheckNumberAccessCompute_AccountTypeIsNotChecking_Hidden()
         {
             var bankAccount = new BankAccount(TestContext) { Type = BankAccountType.CreditCard };
             Assert.IsFalse(bankAccount.accessNextCheckNumber.ClientReadable, "NextCheckNumber should be hide because account type is not 'Checking'");
         }
 
         [TestMethod]
-        public void BankAccountAccessNextCheckNumber_AccountTypeChecking_Writable()
+        public void BankAccountNextCheckNumberAccessCompute_AccountTypeChecking_Writable()
         {
             var bankAccount = new BankAccount(TestContext) { Type = BankAccountType.Checking };
             Assert.IsTrue(bankAccount.accessNextCheckNumber.ClientWritable, "NextCheckNumber should be writable because account type is 'Checking'");
@@ -139,7 +139,7 @@ namespace Sales.Payment
 
 #if DEBUG
         [TestMethod]
-        public void CustomerComputeAllPaymentTypes_IsAnonymousCustomer_ChargeAndPayFromAccountNotAvailable()
+        public void CustomerAllPaymentTypesCompute_IsAnonymousCustomer_ChargeAndPayFromAccountNotAvailable()
         {
             var customer = new Customer(TestContext);
             var allPaymentTypesCount = TestContext.GetEntities<PaymentType>().Count();
@@ -148,7 +148,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void CustomerComputeAllPaymentTypes_IsNotAnonymousCustomer_AllPaymentTypesAreAvailable()
+        public void CustomerAllPaymentTypesCompute_IsNotAnonymousCustomer_AllPaymentTypesAreAvailable()
         {
             var customer = new Customer(TestContext);
             var allPaymentTypesCount = TestContext.GetEntities<PaymentType>().Count();
@@ -178,7 +178,7 @@ namespace Sales.Payment
 
 #if DEBUG
         [TestMethod]
-        public void SalesInvoiceProcessAndOrPayExecuting_ThereIsNotAnyAllowedType_DisplayMessage()
+        public void SalesInvoicecmdProcessAndOrPayExecuting_ThereIsNotAnyAllowedType_DisplayMessage()
         {
             var message = new MessageId(this, nameof(SalesInvoice_cmdProcessAndOrPay_Executing));
             var salesInvoice = PaymentHelper.CreateInvoiceWithDetail(PaymentHelper.GetCustomer("LGBUI"), PaymentHelper.DefaultProduct, 1, 12).Invoice;
@@ -188,7 +188,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void SalesInvoiceProcessAndOrPayExecuting_WhenThereAreSomeAllowedType_NoMessage()
+        public void SalesInvoicecmdProcessAndOrPayExecuting_WhenThereAreSomeAllowedType_NoMessage()
         {
             var message = new MessageId(this, nameof(SalesInvoice_cmdProcessAndOrPay_Executing));
             var customer = TestContext.GetEntity<Customer>("AMERET");
@@ -215,7 +215,7 @@ namespace Sales.Payment
 
 #if DEBUG
         [TestMethod]
-        public void SalesInvoiceAftercmdProcess_NoAllowedPaymentType_DisplayMessage()
+        public void SalesInvoicecmdProcessExecuted_NoAllowedPaymentType_DisplayMessage()
         {
             var warningMessage = new MessageId(typeof(SalesInvoiceBL), nameof(SalesInvoiceBL.SalesInvoice_cmdProcess_Executed));
             var customer = PaymentHelper.GetCustomer("ZURMIK");
@@ -226,7 +226,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void SalesInvoiceAftercmdProcess_OnlyAllowedNoneRealPaymentType_DisplayMessage()
+        public void SalesInvoicecmdProcessExecuted_OnlyAllowedNoneRealPaymentType_DisplayMessage()
         {
             var warningMessage = new MessageId(typeof(SalesInvoiceBL), nameof(SalesInvoiceBL.SalesInvoice_cmdProcess_Executed));
             var customer = PaymentHelper.GetCustomer("ZURMIK");
@@ -239,7 +239,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void SalesInvoiceAftercmdProcess_HasAllowedRealPaymentType_NoMessage()
+        public void SalesInvoicecmdProcessExecuted_HasAllowedRealPaymentType_NoMessage()
         {
             var warningMessage = new MessageId(typeof(SalesInvoiceBL), nameof(SalesInvoiceBL.SalesInvoice_cmdProcess_Executed));
             var salesInvoice = PaymentHelper.CreateInvoiceWithDetail(PaymentHelper.GetCustomer("AMERET"), PaymentHelper.DefaultProduct, 10, 10).Invoice;
@@ -336,7 +336,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void CustomerPaymentsViewSelectedItemsCollectionChanged_Added_AddTemporaryLink()
+        public void CustomerPaymentsViewSelectedInvoicesChanged_Added_AddTemporaryLink()
         {
             var customer = TestContext.GetEntity<Customer>("AMERET");
             var paymentView = TestContext.GetEntities<CustomerPaymentsView>().Single();
@@ -347,7 +347,7 @@ namespace Sales.Payment
         }
 
         [TestMethod]
-        public void CustomerPaymentsViewSelectedItemsCollectionChanged_Removed_RemoveTemporaryLink()
+        public void CustomerPaymentsViewSelectedInvoicesChanged_Removed_RemoveTemporaryLink()
         {
             var customer = TestContext.GetEntity<Customer>("AMERET");
             var paymentView = TestContext.GetEntities<CustomerPaymentsView>().Single();
